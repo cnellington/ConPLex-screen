@@ -37,6 +37,7 @@ cd ConPLex
 conda create -n conplex-dti python=3.9
 conda activate conplex-dti
 make poetry-download
+# If this fails at rdkit, just pip install rdkit==2022.9.5
 export PATH="[poetry  install  location]:$PATH"
 export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
 make install
