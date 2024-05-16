@@ -30,6 +30,7 @@ def main():
         # "embed": embed,
         # "evaluate": evaluate,
         "predict": (cli.predict, cli.predict_parser),
+        "embed": (cli.embed, cli.embed_parser),
     }
 
     for name, (main_func, args_func) in modules.items():
