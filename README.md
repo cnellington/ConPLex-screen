@@ -42,6 +42,9 @@ export PATH="[poetry  install  location]:$PATH"
 export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
 make install
 conplex-dti --help
+
+# Extra dependencies
+pip install pyfaidx==0.8.1.1
 ```
 
 ## Usage
