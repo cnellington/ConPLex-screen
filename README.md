@@ -62,6 +62,11 @@ conplex-dti download --to . --models ConPLex_v1_BindingDB
 conplex-dti train --run-id TestRun --config config/default_config.yaml
 ```
 
+### Get pre-trained co-embeddings
+```bash
+conplex-dti embed --moltype [protein or molecule] --data-file [protein seqs or molecule SMILES].tsv --model-path ./models/ConPLex_v1_BindingDB.pt --outfile ./results.npz
+```
+
 ### Make predictions with a trained model
 
 ```bash
