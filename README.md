@@ -65,6 +65,33 @@ conplex-dti download --to . --models ConPLex_v1_BindingDB
 conplex-dti train --run-id TestRun --config config/default_config.yaml
 ```
 
+### Download & Clean Multispecies Proteomes
+```bash
+conda install -c conda-forge ncbi-datasets-cli
+mkdir -p datasets/genomes
+
+# Download
+datasets download genome taxon human --reference --assembly-level chromosome --include protein --dehydrated --filename datasets/genomes/human.zip
+datasets download genome taxon fungi --reference --assembly-level chromosome --include protein --dehydrated --filename datasets/genomes/fungi.zip
+datasets download genome taxon bacteria --reference --assembly-level complete --include protein --dehydrated --filename datasets/genomes/bacteria.zip
+
+# Unzip
+unzip datasets/genomes/human.zip -d datasets/genomes/human
+unzip datasets/genomes/fungi.zip -d datasets/genomes/fungi
+unzip datasets/genomes/bacteria.zip -d datasets/genomes/bacteria
+
+# Rehydrate
+datasets rehydrate --directory datasets/genomes/human
+datasets rehydrate --directory datasets/genomes/fungi
+datasets rehydrate --directory datasets/genomes/bacteria
+
+# Clean
+mkdir -p datasets/proteomes
+python process_faa.py --files datasets/genomes/human/ncbi_dataset/data/*/protein.faa --output datasets/proteomes/human.tsv
+python process_faa.py --files datasets/genomes/fungi/ncbi_dataset/data/*/protein.faa --output datasets/proteomes/fungi.tsv
+python process_faa.py --files datasets/genomes/bacteria/ncbi_dataset/data/*/protein.faa --output datasets/proteomes/bacteria.tsv
+```
+
 ### Get pre-trained co-embeddings
 ```bash
 conplex-dti embed --moltype [protein or molecule] --data-file [protein seqs or molecule SMILES].tsv --model-path ./models/ConPLex_v1_BindingDB.pt --outfile ./results.npz
