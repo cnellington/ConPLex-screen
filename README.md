@@ -125,21 +125,19 @@ results = collection.query(
     n_results=50,
 )
 ```
-`results` is a list of dictionaries with the following structure
+`results` is a dictionary of lists containing each return value with the structure
 ```json
-[
-  {
-    'ids': [str],
-    'documents': [protein seqs: str]
-    'metadatas': [
-      {
-        'name': str,
-        'kingdom: str
-      },
-    ],
-    'distances': [cosine similarity: float]
-  }
-]
+{
+  'ids': [str],
+  'documents': [protein seqs: str]
+  'metadatas': [
+    {
+      'name': str,
+      'kingdom: str
+    },
+  ],
+  'distances': [cosine similarity: float]
+}
 ```
 
 ## Reference
