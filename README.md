@@ -96,6 +96,7 @@ python process_faa.py --files datasets/genomes/bacteria/ncbi_dataset/data/*/prot
 ```bash
 conplex-dti embed --moltype [protein or molecule] --data-file [protein seqs or molecule SMILES].tsv --model-path ./models/ConPLex_v1_BindingDB.pt --outfile ./results.npz
 ```
+Format of `[pair predict file].tsv` should be `[protein ID]\t[molecule ID]\t[protein Sequence]\t[molecule SMILES]`
 
 ### Make predictions with a trained model
 
@@ -103,12 +104,42 @@ conplex-dti embed --moltype [protein or molecule] --data-file [protein seqs or m
 conplex-dti predict --data-file [pair predict file].tsv --model-path ./models/ConPLex_v1_BindingDB.pt --outfile ./results.tsv
 ```
 
-Format of `[pair predict file].tsv` should be `[protein ID]\t[molecule ID]\t[protein Sequence]\t[molecule SMILES]`
-
-### Visualize co-embedding space
-
+## Use chromadb to query embeddings
 ```bash
-...
+# Install
+pip install chromadb
+# Download into ./dbs folder from box
+```
+```python
+# Use chroma to query protein coembeddings with molecule coembeddings
+import numpy as np
+import chromadb
+
+molecule_embeddings = np.load('natural_products_embeddings.npz', allow_pickle=True)
+mols = molecule_embeddings['embedding'].tolist()
+
+client = chromadb.PersistentClient(path="./dbs")
+collection = client.get_or_create_collection(name="conplex_v0", metadata={"hnsw:space": "cosine"})
+results = collection.query(
+    query_embeddings=mols,
+    n_results=50,
+)
+```
+`results` is a list of dictionaries with the following structure
+```json
+[
+  {
+    'ids': [str],
+    'documents': [protein seqs: str]
+    'metadatas': [
+      {
+        'name': str,
+        'kingdom: str
+      },
+    ],
+    'distances': [cosine similarity: float]
+  }
+]
 ```
 
 ## Reference
